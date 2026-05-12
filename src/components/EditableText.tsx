@@ -62,9 +62,11 @@ export function EditableText({
       className={`${className} ${editing ? "outline outline-2 outline-primary rounded px-1" : "cursor-text hover:outline hover:outline-1 hover:outline-primary/40 rounded"} relative inline-block`}
       contentEditable
       suppressContentEditableWarning
+      onClick={(e: React.MouseEvent) => e.stopPropagation()}
       onFocus={() => setEditing(true)}
       onBlur={save}
       onKeyDown={(e: React.KeyboardEvent) => {
+        e.stopPropagation();
         if (!multiline && e.key === "Enter") { e.preventDefault(); (e.target as HTMLElement).blur(); }
         if (e.key === "Escape") { (e.target as HTMLElement).blur(); }
       }}
