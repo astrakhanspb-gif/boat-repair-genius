@@ -1,4 +1,5 @@
 import { LeadForm } from "./LeadForm";
+import { EditableText } from "./EditableText";
 import { Anchor } from "lucide-react";
 
 export function FloatingMaster() {
@@ -7,7 +8,7 @@ export function FloatingMaster() {
       <div className="rounded-2xl bg-card/90 backdrop-blur-xl border border-primary/30 shadow-deep p-4">
         <div className="flex items-center gap-2 mb-3">
           <Anchor className="w-4 h-4 text-primary" />
-          <p className="text-sm font-semibold text-gold">Задай вопрос мастеру</p>
+          <EditableText textKey="floating_title" defaultValue="Задай вопрос мастеру" className="text-sm font-semibold text-gold" />
         </div>
         <LeadForm source="floating-master" variant="compact" />
       </div>

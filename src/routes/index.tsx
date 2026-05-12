@@ -2,13 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { LeadForm } from "@/components/LeadForm";
 import { FloatingMaster } from "@/components/FloatingMaster";
 import { AdminAddDialog } from "@/components/AdminAddDialog";
-import { AdminBar } from "@/components/AdminBar";
-import { Anchor, Wrench, MessageSquareQuote, Star, ChevronDown, Trash2 } from "lucide-react";
-import heroImg from "@/assets/hero-boat.jpg";
-import { Button } from "@/components/ui/button";
+import { LogoLogin } from "@/components/LogoLogin";
+import { EditableText } from "@/components/EditableText";
+import { Wrench, MessageSquareQuote, Star, ChevronDown, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -45,39 +43,15 @@ function Index() {
 
   return (
     <>
-      <AdminBar />
+      <LogoLogin />
       <div className="snap-page">
-        {/* SECTION 1 — HERO */}
-        <section className="snap-section relative flex items-center justify-center px-4 pb-32 overflow-hidden">
-          <img src={heroImg} alt="Мастерская по ремонту лодок" className="absolute inset-0 w-full h-full object-cover opacity-40" width={1920} height={1280} />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background" />
-          <div className="relative z-10 max-w-3xl text-center space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/40 bg-card/40 backdrop-blur">
-              <Anchor className="w-3.5 h-3.5 text-primary" />
-              <span className="text-xs uppercase tracking-widest text-primary">Мастерская у воды</span>
-            </div>
-            <h1 className="text-5xl sm:text-7xl font-display leading-[0.95]">
-              Ремонт лодок,<br /><span className="text-gold">которым доверяют</span>
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-              Корпус, мотор, покраска и тюнинг. Оставьте имя и номер — мастер перезвонит за 15 минут.
-            </p>
-            <div className="max-w-md mx-auto rounded-2xl bg-card/70 backdrop-blur-xl border border-primary/30 p-5 shadow-glow">
-              <LeadForm source="hero" />
-            </div>
-            <div className="pt-8 flex justify-center text-muted-foreground/60 animate-bounce">
-              <ChevronDown className="w-6 h-6" />
-            </div>
-          </div>
-        </section>
-
-        {/* SECTION 2 — SERVICES */}
-        <section className="snap-section relative px-4 py-20">
+        {/* SECTION 1 — SERVICES */}
+        <section className="snap-section relative px-4 py-20 pt-24">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <Wrench className="w-8 h-8 text-primary mx-auto mb-3" />
-              <h2 className="text-4xl sm:text-5xl font-display text-gold">Услуги</h2>
-              <p className="text-muted-foreground mt-2">Прозрачные цены и реальные сроки</p>
+              <EditableText as="h1" textKey="services_title" defaultValue="Услуги" className="text-4xl sm:text-5xl font-display text-gold" />
+              <EditableText as="p" textKey="services_subtitle" defaultValue="Прозрачные цены и реальные сроки" className="text-muted-foreground mt-2 block" />
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {services.map((s) => (
@@ -119,13 +93,13 @@ function Index() {
           </div>
         </section>
 
-        {/* SECTION 3 — REVIEWS */}
+        {/* SECTION 2 — REVIEWS */}
         <section className="snap-section relative px-4 py-20">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <Star className="w-8 h-8 text-primary mx-auto mb-3" />
-              <h2 className="text-4xl sm:text-5xl font-display text-gold">Отзывы</h2>
-              <p className="text-muted-foreground mt-2">Реальные клиенты, реальные пруфы</p>
+              <EditableText as="h2" textKey="reviews_title" defaultValue="Отзывы" className="text-4xl sm:text-5xl font-display text-gold" />
+              <EditableText as="p" textKey="reviews_subtitle" defaultValue="Реальные клиенты, реальные пруфы" className="text-muted-foreground mt-2 block" />
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {reviews.map((r) => (
@@ -161,13 +135,13 @@ function Index() {
           </div>
         </section>
 
-        {/* SECTION 4 — OBJECTIONS */}
+        {/* SECTION 3 — OBJECTIONS */}
         <section className="snap-section relative px-4 py-20">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-12">
               <MessageSquareQuote className="w-8 h-8 text-primary mx-auto mb-3" />
-              <h2 className="text-4xl sm:text-5xl font-display text-gold">Возражения</h2>
-              <p className="text-muted-foreground mt-2">Ответы на частые сомнения</p>
+              <EditableText as="h2" textKey="objections_title" defaultValue="Возражения" className="text-4xl sm:text-5xl font-display text-gold" />
+              <EditableText as="p" textKey="objections_subtitle" defaultValue="Ответы на частые сомнения" className="text-muted-foreground mt-2 block" />
             </div>
             <div className="space-y-3">
               {objections.map((o) => (

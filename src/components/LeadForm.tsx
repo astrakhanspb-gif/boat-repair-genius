@@ -2,6 +2,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { EditableText } from "./EditableText";
 import { toast } from "sonner";
 
 export function LeadForm({ source, variant = "default" }: { source: string; variant?: "default" | "compact" }) {
@@ -44,7 +45,7 @@ export function LeadForm({ source, variant = "default" }: { source: string; vari
         className="bg-background/60 border-border backdrop-blur"
       />
       <Button type="submit" disabled={loading} className="bg-gold text-primary-foreground font-semibold hover:opacity-90 shadow-glow">
-        {loading ? "Отправка..." : "Заявка"}
+        {loading ? "Отправка..." : <EditableText textKey={`lead_btn_${source}`} defaultValue="Заявка" />}
       </Button>
     </form>
   );
