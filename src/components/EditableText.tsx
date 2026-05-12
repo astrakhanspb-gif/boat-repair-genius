@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ElementType } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
-import { Pencil } from "lucide-react";
 
 const cache = new Map<string, string>();
 const listeners = new Set<() => void>();
@@ -24,7 +23,7 @@ export function EditableText({
 }: {
   textKey: string;
   defaultValue: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: ElementType;
   className?: string;
   multiline?: boolean;
 }) {
@@ -65,7 +64,7 @@ export function EditableText({
       suppressContentEditableWarning
       onFocus={() => setEditing(true)}
       onBlur={save}
-      onKeyDown={(e) => {
+      onKeyDown={(e: React.KeyboardEvent) => {
         if (!multiline && e.key === "Enter") { e.preventDefault(); (e.target as HTMLElement).blur(); }
         if (e.key === "Escape") { (e.target as HTMLElement).blur(); }
       }}
