@@ -6,6 +6,7 @@ import { FloatingMaster } from "@/components/FloatingMaster";
 import { AdminAddDialog } from "@/components/AdminAddDialog";
 import { LogoLogin } from "@/components/LogoLogin";
 import { EditableText } from "@/components/EditableText";
+import { AdminEditableValue } from "@/components/AdminEditableValue";
 import { Wrench, MessageSquareQuote, Star, ChevronDown, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -59,10 +60,10 @@ function Index() {
                   {s.image_url && <img src={s.image_url} alt={s.title} className="w-full h-44 object-cover" loading="lazy" />}
                   <div className="p-5 space-y-2">
                     <div className="flex items-baseline justify-between gap-2">
-                      <h3 className="text-lg font-semibold">{s.title}</h3>
-                      <span className="text-gold font-bold whitespace-nowrap">{s.price}</span>
+                      <AdminEditableValue table="services" rowId={s.id} field="title" value={s.title} as="h3" className="text-lg font-semibold" />
+                      <AdminEditableValue table="services" rowId={s.id} field="price" value={s.price} className="text-gold font-bold whitespace-nowrap" />
                     </div>
-                    <p className="text-sm text-muted-foreground">{s.description}</p>
+                    <AdminEditableValue table="services" rowId={s.id} field="description" value={s.description} as="p" className="text-sm text-muted-foreground" multiline />
                   </div>
                   {isAdmin && (
                     <button onClick={() => remove("services", s.id)} className="absolute top-2 right-2 p-1.5 rounded-md bg-destructive/80 text-destructive-foreground opacity-0 group-hover:opacity-100 transition">
@@ -105,8 +106,8 @@ function Index() {
               {reviews.map((r) => (
                 <article key={r.id} className="group relative rounded-2xl bg-card border border-border p-5 shadow-deep hover:border-primary/50 transition">
                   {r.proof_image_url && <img src={r.proof_image_url} alt={`Пруф от ${r.author_name}`} className="w-full h-48 object-cover rounded-lg mb-3" loading="lazy" />}
-                  <p className="text-sm text-foreground/90 mb-3 italic">«{r.text}»</p>
-                  <p className="text-xs text-primary font-semibold">— {r.author_name}</p>
+                  <AdminEditableValue table="reviews" rowId={r.id} field="text" value={r.text} as="p" className="text-sm text-foreground/90 mb-3 italic" multiline />
+                  <AdminEditableValue table="reviews" rowId={r.id} field="author_name" value={r.author_name} as="p" className="text-xs text-primary font-semibold" />
                   {isAdmin && (
                     <button onClick={() => remove("reviews", r.id)} className="absolute top-2 right-2 p-1.5 rounded-md bg-destructive/80 text-destructive-foreground opacity-0 group-hover:opacity-100 transition">
                       <Trash2 className="w-3.5 h-3.5" />
@@ -147,10 +148,10 @@ function Index() {
               {objections.map((o) => (
                 <details key={o.id} className="group rounded-2xl bg-card border border-border p-5 shadow-deep open:border-primary/50 transition">
                   <summary className="flex items-center justify-between cursor-pointer list-none">
-                    <span className="font-semibold pr-4">{o.question}</span>
+                    <AdminEditableValue table="objections" rowId={o.id} field="question" value={o.question} as="span" className="font-semibold pr-4" />
                     <ChevronDown className="w-5 h-5 text-primary transition-transform group-open:rotate-180" />
                   </summary>
-                  <p className="mt-3 text-muted-foreground leading-relaxed">{o.answer}</p>
+                  <AdminEditableValue table="objections" rowId={o.id} field="answer" value={o.answer} as="p" className="mt-3 text-muted-foreground leading-relaxed" multiline />
                   {isAdmin && (
                     <button onClick={() => remove("objections", o.id)} className="mt-3 text-xs text-destructive hover:underline inline-flex items-center gap-1">
                       <Trash2 className="w-3 h-3" /> Удалить
