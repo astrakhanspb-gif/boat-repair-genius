@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ElementType } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { Pencil } from "lucide-react";
 
 const cache = new Map<string, string>();
 const listeners = new Set<() => void>();
