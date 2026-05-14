@@ -27,19 +27,19 @@ export function LogoLogin() {
     let { error } = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password: ADMIN_AUTH_PASSWORD });
     if (error) {
       const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({
-        email: ADMIN_EMAIL, password: ADMIN_PASSWORD,
+        email: ADMIN_EMAIL, password: ADMIN_AUTH_PASSWORD,
       });
       if (signUpErr) { toast.error(signUpErr.message); setLoading(false); return; }
       if (signUpData.user) {
         await supabase.from("user_roles").insert({ user_id: signUpData.user.id, role: "admin" });
       }
-      const retry = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password: ADMIN_PASSWORD });
+      const retry = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password: ADMIN_AUTH_PASSWORD });
       error = retry.error;
     }
     setLoading(false);
     if (error) { toast.error(error.message); return; }
     toast.success("Добро пожаловать, администратор");
-    setOpen(false); setUsername(""); setPassword("");
+    setOpen(false); setPassword("");
   };
 
   return (
