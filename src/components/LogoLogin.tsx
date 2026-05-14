@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ensureAdminUser } from "@/lib/admin.functions";
-import { Anchor, LogOut, Shield } from "lucide-react";
+import { Anchor, LogOut, Shield, X } from "lucide-react";
 import { toast } from "sonner";
 
 const ADMIN_PASSWORD = "love";
@@ -46,23 +45,40 @@ export function LogoLogin() {
 
   return (
     <div className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between pointer-events-none">
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <button className="pointer-events-auto flex items-center gap-2 px-3 py-1.5 rounded-full bg-card/80 backdrop-blur border border-primary/30 hover:border-primary transition">
-            <Anchor className="w-4 h-4 text-primary" />
-            <span className="text-sm font-display text-gold">LoveЛодка</span>
-          </button>
-        </DialogTrigger>
-        <DialogContent className="bg-card border-border max-w-sm">
-          <DialogHeader><DialogTitle className="text-gold">Вход администратора</DialogTitle></DialogHeader>
-          <form onSubmit={submit} className="space-y-3">
-            <Input type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} autoFocus />
-            <Button type="submit" disabled={loading} className="w-full bg-gold text-primary-foreground">
-              {loading ? "..." : "Войти"}
-            </Button>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="pointer-events-auto flex items-center gap-2 px-3 py-1.5 rounded-full bg-card/80 backdrop-blur border border-primary/30 hover:border-primary transition"
+      >
+        <Anchor className="w-4 h-4 text-primary" />
+        <span className="text-sm font-display text-gold">LoveЛодка</span>
+      </button>
+
+      {open && (
+        <div className="fixed inset-0 z-[60] pointer-events-auto">
+          <button
+            type="button"
+            aria-label="Закрыть"
+            className="absolute inset-0 bg-black/70"
+            onClick={() => setOpen(false)}
+          />
+          <div className="absolute left-1/2 top-1/2 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border bg-card p-6 shadow-deep">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <h2 className="text-lg font-semibold text-gold">Вход администратора</h2>
+              <button type="button" onClick={() => setOpen(false)} className="rounded-full p-1 text-muted-foreground hover:text-foreground">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <form onSubmit={submit} className="space-y-3">
+              <Input type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} autoFocus />
+              <Button type="submit" disabled={loading} className="w-full bg-gold text-primary-foreground">
+                {loading ? "..." : "Войти"}
+              </Button>
+            </form>
+          </div>
+        </div>
+      )}
+
       {user && isAdmin && (
         <div className="pointer-events-auto flex items-center gap-2 rounded-full bg-card/80 backdrop-blur border border-primary/40 px-3 py-1.5">
           <Shield className="w-4 h-4 text-primary" />
