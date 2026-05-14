@@ -54,8 +54,7 @@ export function LogoLogin() {
         <DialogContent className="bg-card border-border max-w-sm">
           <DialogHeader><DialogTitle className="text-gold">Вход администратора</DialogTitle></DialogHeader>
           <form onSubmit={submit} className="space-y-3">
-            <Input placeholder="Имя" value={username} onChange={(e) => setUsername(e.target.value)} autoFocus />
-            <Input type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} autoFocus />
             <Button type="submit" disabled={loading} className="w-full bg-gold text-primary-foreground">
               {loading ? "..." : "Войти"}
             </Button>
