@@ -7,40 +7,39 @@ import { Input } from "@/components/ui/input";
 import { Anchor, LogOut, Shield } from "lucide-react";
 import { toast } from "sonner";
 
-const ADMIN_USERNAME = "love";
 const ADMIN_PASSWORD = "love";
 const ADMIN_EMAIL = "love@lovelodka.app";
+const ADMIN_AUTH_PASSWORD = "love-lovelodka-admin-2026";
 
 export function LogoLogin() {
   const { isAdmin, user } = useAuth();
   const [open, setOpen] = useState(false);
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
-      toast.error("Неверный логин или пароль");
+    if (password !== ADMIN_PASSWORD) {
+      toast.error("Неверный пароль");
       return;
     }
     setLoading(true);
-    let { error } = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password: ADMIN_PASSWORD });
+    let { error } = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password: ADMIN_AUTH_PASSWORD });
     if (error) {
       const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({
-        email: ADMIN_EMAIL, password: ADMIN_PASSWORD,
+        email: ADMIN_EMAIL, password: ADMIN_AUTH_PASSWORD,
       });
       if (signUpErr) { toast.error(signUpErr.message); setLoading(false); return; }
       if (signUpData.user) {
         await supabase.from("user_roles").insert({ user_id: signUpData.user.id, role: "admin" });
       }
-      const retry = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password: ADMIN_PASSWORD });
+      const retry = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password: ADMIN_AUTH_PASSWORD });
       error = retry.error;
     }
     setLoading(false);
     if (error) { toast.error(error.message); return; }
     toast.success("Добро пожаловать, администратор");
-    setOpen(false); setUsername(""); setPassword("");
+    setOpen(false); setPassword("");
   };
 
   return (
@@ -55,8 +54,7 @@ export function LogoLogin() {
         <DialogContent className="bg-card border-border max-w-sm">
           <DialogHeader><DialogTitle className="text-gold">Вход администратора</DialogTitle></DialogHeader>
           <form onSubmit={submit} className="space-y-3">
-            <Input placeholder="Имя" value={username} onChange={(e) => setUsername(e.target.value)} autoFocus />
-            <Input type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} autoFocus />
             <Button type="submit" disabled={loading} className="w-full bg-gold text-primary-foreground">
               {loading ? "..." : "Войти"}
             </Button>
