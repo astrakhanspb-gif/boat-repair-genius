@@ -16,8 +16,8 @@ jobs:
       - run: bun run build
       - uses: actions/upload-pages-artifact@v3
         with:
-          # Здесь было 'dist', заменяем на правильный путь для TanStack Start
-          path: .output/public
+          # ТОЧНЫЙ ПУТЬ из лога сборки:
+          path: dist/client
   deploy:
     needs: build
     runs-on: ubuntu-latest
