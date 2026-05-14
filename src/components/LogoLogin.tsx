@@ -1,9 +1,7 @@
-import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ensureAdminUser } from "@/lib/admin.functions";
 import { Anchor, LogOut, Shield } from "lucide-react";
 import { toast } from "sonner";
 
@@ -13,54 +11,44 @@ const ADMIN_AUTH_PASSWORD = "love-lovelodka-admin-2026";
 
 export function LogoLogin() {
   const { isAdmin, user } = useAuth();
-  const [open, setOpen] = useState(false);
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submit = async (password: string) => {
     if (password !== ADMIN_PASSWORD) {
       toast.error("Неверный пароль");
       return;
     }
-    setLoading(true);
     let { error } = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password: ADMIN_AUTH_PASSWORD });
     if (error) {
       const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({
         email: ADMIN_EMAIL, password: ADMIN_AUTH_PASSWORD,
       });
-      if (signUpErr) { toast.error(signUpErr.message); setLoading(false); return; }
+      if (signUpErr) { toast.error(signUpErr.message); return; }
       if (signUpData.user) {
-        await supabase.from("user_roles").insert({ user_id: signUpData.user.id, role: "admin" });
+        await ensureAdminUser();
       }
       const retry = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password: ADMIN_AUTH_PASSWORD });
       error = retry.error;
     }
-    setLoading(false);
+    await ensureAdminUser();
     if (error) { toast.error(error.message); return; }
     toast.success("Добро пожаловать, администратор");
-    setOpen(false); setPassword("");
   };
 
   return (
     <div className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between pointer-events-none">
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <button className="pointer-events-auto flex items-center gap-2 px-3 py-1.5 rounded-full bg-card/80 backdrop-blur border border-primary/30 hover:border-primary transition">
-            <Anchor className="w-4 h-4 text-primary" />
-            <span className="text-sm font-display text-gold">LoveЛодка</span>
-          </button>
-        </DialogTrigger>
-        <DialogContent className="bg-card border-border max-w-sm">
-          <DialogHeader><DialogTitle className="text-gold">Вход администратора</DialogTitle></DialogHeader>
-          <form onSubmit={submit} className="space-y-3">
-            <Input type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} autoFocus />
-            <Button type="submit" disabled={loading} className="w-full bg-gold text-primary-foreground">
-              {loading ? "..." : "Войти"}
-            </Button>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <button
+        type="button"
+        onClick={async () => {
+          const password = window.prompt("Введите пароль администратора", "");
+          if (password == null) return;
+          await submit(password);
+        }}
+        className="pointer-events-auto flex items-center gap-2 px-3 py-1.5 rounded-full bg-card/80 backdrop-blur border border-primary/30 hover:border-primary transition"
+      >
+        <Anchor className="w-4 h-4 text-primary" />
+        <span className="text-sm font-display text-gold">LoveЛодка</span>
+      </button>
+
       {user && isAdmin && (
         <div className="pointer-events-auto flex items-center gap-2 rounded-full bg-card/80 backdrop-blur border border-primary/40 px-3 py-1.5">
           <Shield className="w-4 h-4 text-primary" />

@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { toast } from "sonner";
 
 async function uploadImage(file: File): Promise<string | null> {
@@ -48,32 +47,41 @@ export function AdminAddDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button size="icon" className="bg-gold text-primary-foreground rounded-full w-14 h-14 shadow-glow hover:scale-105 transition-transform">
-          <Plus className="w-6 h-6" />
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="bg-card border-border">
-        <DialogHeader><DialogTitle className="text-gold">{label}</DialogTitle></DialogHeader>
-        <form onSubmit={submit} className="space-y-3">
-          {fields.map((f) => (
-            <div key={f.name} className="space-y-1">
-              <label className="text-sm text-muted-foreground">{f.label}</label>
-              {f.type === "textarea" ? (
-                <Textarea value={values[f.name] || ""} onChange={(e) => setValues({ ...values, [f.name]: e.target.value })} required={f.required} />
-              ) : f.type === "file" ? (
-                <Input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} />
-              ) : (
-                <Input value={values[f.name] || ""} onChange={(e) => setValues({ ...values, [f.name]: e.target.value })} required={f.required} />
-              )}
+    <>
+      <Button type="button" size="icon" onClick={() => setOpen(true)} className="bg-gold text-primary-foreground rounded-full w-14 h-14 shadow-glow hover:scale-105 transition-transform">
+        <Plus className="w-6 h-6" />
+      </Button>
+
+      {open && (
+        <div className="fixed inset-0 z-[60]">
+          <button type="button" aria-label="Закрыть" className="absolute inset-0 bg-black/70" onClick={() => setOpen(false)} />
+          <div className="absolute left-1/2 top-1/2 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border bg-card p-6 shadow-deep">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <h2 className="text-lg font-semibold text-gold">{label}</h2>
+              <button type="button" onClick={() => setOpen(false)} className="rounded-full p-1 text-muted-foreground hover:text-foreground">
+                <X className="h-4 w-4" />
+              </button>
             </div>
-          ))}
-          <Button type="submit" disabled={loading} className="bg-gold text-primary-foreground w-full">
-            {loading ? "Сохранение..." : "Сохранить"}
-          </Button>
-        </form>
-      </DialogContent>
-    </Dialog>
+            <form onSubmit={submit} className="space-y-3">
+              {fields.map((f) => (
+                <div key={f.name} className="space-y-1">
+                  <label className="text-sm text-muted-foreground">{f.label}</label>
+                  {f.type === "textarea" ? (
+                    <Textarea value={values[f.name] || ""} onChange={(e) => setValues({ ...values, [f.name]: e.target.value })} required={f.required} />
+                  ) : f.type === "file" ? (
+                    <Input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+                  ) : (
+                    <Input value={values[f.name] || ""} onChange={(e) => setValues({ ...values, [f.name]: e.target.value })} required={f.required} />
+                  )}
+                </div>
+              ))}
+              <Button type="submit" disabled={loading} className="bg-gold text-primary-foreground w-full">
+                {loading ? "Сохранение..." : "Сохранить"}
+              </Button>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
