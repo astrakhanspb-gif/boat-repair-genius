@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ensureAdminUser } from "@/lib/admin.functions";
 import { Anchor, LogOut, Shield } from "lucide-react";
 import { toast } from "sonner";
 
@@ -31,11 +32,12 @@ export function LogoLogin() {
       });
       if (signUpErr) { toast.error(signUpErr.message); setLoading(false); return; }
       if (signUpData.user) {
-        await supabase.from("user_roles").insert({ user_id: signUpData.user.id, role: "admin" });
+        await ensureAdminUser();
       }
       const retry = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password: ADMIN_AUTH_PASSWORD });
       error = retry.error;
     }
+    await ensureAdminUser();
     setLoading(false);
     if (error) { toast.error(error.message); return; }
     toast.success("Добро пожаловать, администратор");
