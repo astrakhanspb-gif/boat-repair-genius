@@ -7,9 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Anchor, LogOut, Shield } from "lucide-react";
 import { toast } from "sonner";
 
-const ADMIN_USERNAME = "lovelodka";
-const ADMIN_PASSWORD = "lovelodka";
-const ADMIN_EMAIL = "lovelodka@lovelodka.app";
+const ADMIN_USERNAME = "love";
+const ADMIN_PASSWORD = "love";
+const ADMIN_EMAIL = "love@lovelodka.app";
 
 export function LogoLogin() {
   const { isAdmin, user } = useAuth();

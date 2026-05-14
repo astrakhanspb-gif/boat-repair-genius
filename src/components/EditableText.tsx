@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ElementType } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { Pencil } from "lucide-react";
 
 const cache = new Map<string, string>();
 const listeners = new Set<() => void>();
@@ -57,22 +58,31 @@ export function EditableText({
   }
 
   return (
-    <Tag
-      ref={ref as never}
-      className={`${className} ${editing ? "outline outline-2 outline-primary rounded px-1" : "cursor-text hover:outline hover:outline-1 hover:outline-primary/40 rounded"} relative inline-block`}
-      contentEditable
-      suppressContentEditableWarning
-      onClick={(e: React.MouseEvent) => e.stopPropagation()}
-      onFocus={() => setEditing(true)}
-      onBlur={save}
-      onKeyDown={(e: React.KeyboardEvent) => {
-        e.stopPropagation();
-        if (!multiline && e.key === "Enter") { e.preventDefault(); (e.target as HTMLElement).blur(); }
-        if (e.key === "Escape") { (e.target as HTMLElement).blur(); }
-      }}
-      title="Кликните, чтобы изменить"
-    >
-      {value}
-    </Tag>
+    <span className="relative inline-flex items-center gap-1 group/edit">
+      <Tag
+        ref={ref as never}
+        className={`${className} ${editing ? "outline outline-2 outline-primary rounded px-1" : "cursor-text hover:outline hover:outline-1 hover:outline-primary/40 rounded"} inline-block`}
+        contentEditable
+        suppressContentEditableWarning
+        onClick={(e: React.MouseEvent) => e.stopPropagation()}
+        onFocus={() => setEditing(true)}
+        onBlur={save}
+        onKeyDown={(e: React.KeyboardEvent) => {
+          e.stopPropagation();
+          if (!multiline && e.key === "Enter") { e.preventDefault(); (e.target as HTMLElement).blur(); }
+          if (e.key === "Escape") { (e.target as HTMLElement).blur(); }
+        }}
+      >
+        {value}
+      </Tag>
+      <button
+        type="button"
+        onClick={(e) => { e.stopPropagation(); ref.current?.focus(); }}
+        className="opacity-60 hover:opacity-100 group-hover/edit:opacity-100 text-primary transition shrink-0"
+        title="Редактировать"
+      >
+        <Pencil className="w-3.5 h-3.5" />
+      </button>
+    </span>
   );
 }
