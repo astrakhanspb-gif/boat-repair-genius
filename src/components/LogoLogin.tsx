@@ -7,25 +7,24 @@ import { Input } from "@/components/ui/input";
 import { Anchor, LogOut, Shield } from "lucide-react";
 import { toast } from "sonner";
 
-const ADMIN_USERNAME = "love";
 const ADMIN_PASSWORD = "love";
 const ADMIN_EMAIL = "love@lovelodka.app";
+const ADMIN_AUTH_PASSWORD = "love-lovelodka-admin-2026";
 
 export function LogoLogin() {
   const { isAdmin, user } = useAuth();
   const [open, setOpen] = useState(false);
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
-      toast.error("Неверный логин или пароль");
+    if (password !== ADMIN_PASSWORD) {
+      toast.error("Неверный пароль");
       return;
     }
     setLoading(true);
-    let { error } = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password: ADMIN_PASSWORD });
+    let { error } = await supabase.auth.signInWithPassword({ email: ADMIN_EMAIL, password: ADMIN_AUTH_PASSWORD });
     if (error) {
       const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({
         email: ADMIN_EMAIL, password: ADMIN_PASSWORD,
